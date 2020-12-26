@@ -1,0 +1,14 @@
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+button {
+	height: 50px;
+	width: 100px;
+}
+
+.center-padding {
+	margin: 20px;
+}
