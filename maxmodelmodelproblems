@@ -10,7 +10,7 @@ Current problems with Max Model's rally tracking model:
 -Aces:
 	If there is a no-touch ace, the current user flow is as follows:
 	Tap server -> tap "ace" -> tap reciever
-	Note in the above example, tapping the server is not indicative of a touch, it represents who got aced
+	Note in the above example, tapping the reciever is not indicative of a touch, it represents who got aced
 
 	If there is a 1 touch ace, the current user flow is as follows:
 	Tap server -> tap receiver -> tap "lose point"
