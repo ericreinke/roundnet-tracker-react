@@ -22,6 +22,8 @@ class ButtonContainer extends Component {
 		this.losePointOnClick = this.losePointOnClick.bind(this);
 		this.getServingTeam = this.getServingTeam.bind(this);
 		this.getLastTouchTeam = this.getLastTouchTeam.bind(this);
+		this.erasePrevious = this.erasePrevious.bind(this);
+		this.endGame = this.endGame.bind(this);
 
 	}
 	componentDidUpdate(){
@@ -35,11 +37,32 @@ class ButtonContainer extends Component {
 				currRally: player
 			});
 		}
+		// If the rally is an ace then this "player touch" isn't meant to be a touch:
+		// It is meant to be an indicator of who got aced.  The rally ends here.
+		else if(this.state.currRally.charAt(this.state.currRally.length-1) === 'a'){
+			console.log(this.state.currRally);
+			if(this.getServingTeam() === 1){
+				this.setState({
+					allRallies: this.state.allRallies.concat(this.state.currRally + player),
+					currRally: "",
+					score1: this.state.score1 + 1
+				});
+		}
+			else{ // server is 3 or 4
+				this.setState({
+					allRallies: this.state.allRallies.concat(this.state.currRally + player),
+					currRally: "",
+					score2: this.state.score2 + 1
+				});
+			}
+		}
 		else{
 			this.setState({
 				currRally: this.state.currRally + player
 			});
 		}
+
+
 	}
 
 	aceOnClick(){
@@ -47,20 +70,13 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getServingTeam() == 1){
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "a"),
-				currRally: "",
-				score1: this.state.score1 + 1
-			});
+		if(this.state.currRally.length > 1){
+			console.log("too many touches already occurred. are you looking for 'Lose Point'?");
+			return;
 		}
-		else{ // server is 3 or 4
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "a"),
-				currRally: "",
-				score2: this.state.score2 + 1
-			});
-		}
+		this.setState({
+			currRally: this.state.currRally + "a"
+		});
 	}
 
 	putAwayOnClick(){ //should this button be "put away?	"
@@ -68,7 +84,7 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getLastTouchTeam() == 1){
+		if(this.getLastTouchTeam() === 1){
 			this.setState({
 				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
 				currRally: "",
@@ -89,16 +105,16 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getLastTouchTeam() == 2){
+		if(this.getLastTouchTeam() === 2){
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
+				allRallies: this.state.allRallies.concat(this.state.currRally + "e"),
 				currRally: "",
 				score1: this.state.score1 + 1
 			});
 		}
 		else{
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
+				allRallies: this.state.allRallies.concat(this.state.currRally + "e"),
 				currRally: "",
 				score2: this.state.score2 + 1
 			});
@@ -110,25 +126,37 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getLastTouchTeam() == 2){
+		if(this.getLastTouchTeam() === 2){
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
+				allRallies: this.state.allRallies.concat(this.state.currRally + "n"),
 				currRally: "",
 				score1: this.state.score1 + 1
 			});
 		}
 		else{
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
+				allRallies: this.state.allRallies.concat(this.state.currRally + "n"),
 				currRally: "",
 				score2: this.state.score2 + 1
 			});
 		}
 	}
 
+	erasePrevious(){
+		var tmp = this.state.allRallies;
+		tmp.pop();
+		this.setState({
+			allRallies: tmp
+		});
+	}
+	endGame(){
+		this.props.setRallies(this.state.allRallies);
+		this.props.setDisplay("results");
+	}
+
 	getServingTeam(){
 		var server = this.state.currRally.charAt(0);
-		if(server == '1' || server == '2'){
+		if(server === '1' || server === '2'){
 			return 1;
 		}
 		return 2;
@@ -136,7 +164,7 @@ class ButtonContainer extends Component {
 
 	getLastTouchTeam(){
 		var last = this.state.currRally.charAt(this.state.currRally.length -1);
-		if(last == '1' || last == '2'){
+		if(last === '1' || last === '2'){
 			return 1;
 		}
 		return 2;
@@ -170,6 +198,10 @@ class ButtonContainer extends Component {
 				<button className="player-button center-padding" onClick={()=>this.playerOnClick("4")}>Player 4</button>
 			</div>
 			<span className="center">rally: {this.state.currRally}</span>
+			<div className="center">
+				<button className="center-padding" onClick={this.erasePrevious}>Erase Previous</button>
+				<button className="center-padding" onClick={this.endGame}>End Game</button>
+			</div>
 		</div>
 		);
 	}

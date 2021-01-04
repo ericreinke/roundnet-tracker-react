@@ -1,0 +1,25 @@
+Current problems with Max Model's rally tracking model:
+
+-Errors:
+	Tracking an error that did not occur at the end of a rally is impossible.
+
+	eg: serve recieve -> horrible set (the error) -> failed 3rd touch
+
+	in the above example, the current model would have to track the 3rd touch as the error, or not track the 3rd touch at all.
+
+-Aces:
+	If there is a no-touch ace, the current user flow is as follows:
+	Tap server -> tap "ace" -> tap reciever
+	Note in the above example, tapping the server is not indicative of a touch, it represents who got aced
+
+	If there is a 1 touch ace, the current user flow is as follows:
+	Tap server -> tap receiver -> tap "lose point"
+
+	While these functionalities can accurately represent all ace and rally scenarios, it is unintuitive and confusing to the user, based on today's definition of an "ace".
+
+	1a3 is the ONLY rally type that does not end in a letter.  Fixing this could result in easier human understanding of rallies, and marginally easier parsing (but it is still possible currently).
+
+	Possible solutions:
+	- know who the reciever is before the rally begins (requires prep)
+	- allow the user to tap "ace" after the recieving touch.  This would require the parser to recognize 13a and 1a3 as different rallies
+	- Leave it, explain to user that 13n WILL still count as an ace

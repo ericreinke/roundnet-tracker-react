@@ -2,12 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import ButtonContainer from './components/ButtonContainer';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-  	<ButtonContainer/>
+  	<App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
