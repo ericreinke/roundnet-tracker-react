@@ -4,13 +4,14 @@ import './ButtonContainer.css';
 
 class ButtonContainer extends Component {
 	state ={
+		active: false,
 		score1: 0,
 		score2: 0,
 		teamName1: "team 1",
 		teamName2: "team 2",
-		currRally: "",
-		allRallies:[]
-
+		currRally: "s",
+		allRallies:[],
+		serving: false // this is true if the last touch is the service
 	};
 
 	constructor(){
@@ -24,44 +25,57 @@ class ButtonContainer extends Component {
 		this.getLastTouchTeam = this.getLastTouchTeam.bind(this);
 		this.erasePrevious = this.erasePrevious.bind(this);
 		this.endGame = this.endGame.bind(this);
+		this.serviceFault = this.serviceFault.bind(this);
 
 	}
+
 	componentDidUpdate(){
 		console.log(this.state);
 	}
 
+	componentDidMount(){
+		console.log(this.state.currRally.lastIndexOf('f'));
+	}
+
 	playerOnClick(player){
 		//cant concat if currRally is undefined so need to check
+		//This should never happen now that rallies start with 's'
 		if(this.state.currRally===undefined){
 			this.setState({
 				currRally: player
 			});
+			console.log("this shouldn't have happened since we start rallies with 's'")
 		}
 		// If the rally is an ace then this "player touch" isn't meant to be a touch:
 		// It is meant to be an indicator of who got aced.  The rally ends here.
 		else if(this.state.currRally.charAt(this.state.currRally.length-1) === 'a'){
 			console.log(this.state.currRally);
+			let score1plus = 0, score2plus = 0;
 			if(this.getServingTeam() === 1){
-				this.setState({
-					allRallies: this.state.allRallies.concat(this.state.currRally + player),
-					currRally: "",
-					score1: this.state.score1 + 1
-				});
-		}
-			else{ // server is 3 or 4
-				this.setState({
-					allRallies: this.state.allRallies.concat(this.state.currRally + player),
-					currRally: "",
-					score2: this.state.score2 + 1
-				});
+				score1plus = 1;
 			}
+			else{
+				score2plus = 1;
+			}
+			this.setState({
+				serving: false,
+				allRallies: this.state.allRallies.concat(this.state.currRally + player),
+				currRally: "s",
+				score1: this.state.score1 + score1plus,
+				score2: this.state.score2 + score2plus
+			});
 		}
 		else{
+			let newServing = true;
+			//console.log(this.state.currRally.length - this.state.currRally.lastIndexOf('s'));
+			if(this.state.currRally.length - this.state.currRally.lastIndexOf('s') >=2){
+				newServing = false;
+			}
 			this.setState({
+				serving: newServing,
 				currRally: this.state.currRally + player
 			});
 		}
-
 
 	}
 
@@ -70,11 +84,12 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.state.currRally.length > 1){
+		if(this.state.currRally.length > 2){
 			console.log("too many touches already occurred. are you looking for 'Lose Point'?");
 			return;
 		}
 		this.setState({
+			serving: false,
 			currRally: this.state.currRally + "a"
 		});
 	}
@@ -84,20 +99,20 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
+		let score1plus = 0, score2plus = 0;
 		if(this.getLastTouchTeam() === 1){
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
-				currRally: "",
-				score1: this.state.score1 + 1
-			});
+			score1plus = 1;
 		}
 		else{
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
-				currRally: "",
-				score2: this.state.score2 + 1
-			});
+			score2plus = 1;
 		}
+		this.setState({
+			serving: false,
+			allRallies: this.state.allRallies.concat(this.state.currRally + "p"),
+			currRally: "s",
+			score1: this.state.score1 + score1plus,
+			score2: this.state.score2 + score2plus
+		});
 		
 	}
 	errorOnClick(){
@@ -105,20 +120,20 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getLastTouchTeam() === 2){
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "e"),
-				currRally: "",
-				score1: this.state.score1 + 1
-			});
+		let score1plus = 0, score2plus = 0;
+		if(this.getLastTouchTeam() === 1){
+			score2plus = 1;
 		}
 		else{
-			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "e"),
-				currRally: "",
-				score2: this.state.score2 + 1
-			});
+			score1plus = 1;
 		}
+		this.setState({
+			serving: false,
+			allRallies: this.state.allRallies.concat(this.state.currRally + "e"),
+			currRally: "s",
+			score1: this.state.score1 + score1plus,
+			score2: this.state.score2 + score2plus
+		});
 	}
 
 	losePointOnClick(){
@@ -126,19 +141,48 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.getLastTouchTeam() === 2){
+		let score1plus = 0, score2plus = 0;
+		if(this.getLastTouchTeam() === 1){
+			score2plus = 1;
+		}
+		else {
+			score1plus = 1;
+		}
+		this.setState({
+			serving: false,
+			allRallies: this.state.allRallies.concat(this.state.currRally + "n"),
+			currRally: "s",
+			score1: this.state.score1 + score1plus,
+			score2: this.state.score2 + score2plus
+		});
+	
+	}
+
+	serviceFault(){
+		if(this.state.currRally.lastIndexOf('f') < 0){
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "n"),
-				currRally: "",
-				score1: this.state.score1 + 1
+				currRally: this.state.currRally + 'fs',
+				serving: false,
 			});
 		}
 		else{
+			let score1plus, score2plus
+			if(this.getLastTouchTeam() === 1){
+				score1plus = 0;
+				score2plus = 1;
+			}
+			else{
+				score1plus = 1;
+				score2plus = 0;
+			}
 			this.setState({
-				allRallies: this.state.allRallies.concat(this.state.currRally + "n"),
-				currRally: "",
-				score2: this.state.score2 + 1
+				serving: false,
+				allRallies: this.state.allRallies.concat(this.state.currRally+"s"),
+				currRally: "s",
+				score1: this.state.score1 + score1plus,
+				score2: this.state.score2 + score2plus
 			});
+			
 		}
 	}
 
@@ -155,7 +199,7 @@ class ButtonContainer extends Component {
 	}
 
 	getServingTeam(){
-		var server = this.state.currRally.charAt(0);
+		var server = this.state.currRally.charAt(1);
 		if(server === '1' || server === '2'){
 			return 1;
 		}
@@ -171,6 +215,11 @@ class ButtonContainer extends Component {
 	}
 
 	render(){
+		let faultButton;
+		if(this.state.serving){
+			faultButton = (<button className="center-padding" onClick={this.serviceFault}>Fault</button>);
+		}
+
 		return(
 		<div>
 			<div className="center">
@@ -180,6 +229,9 @@ class ButtonContainer extends Component {
 			<div className="center">
 				<button className="center-padding" onClick={this.errorOnClick}>Error</button>
 				<button className="center-padding" onClick={this.losePointOnClick}>Lose Point</button>
+			</div>
+			<div className="center">
+				{faultButton}
 			</div>
 			<div className="center">
 				<span className="center-padding">{this.state.teamName1}</span>
