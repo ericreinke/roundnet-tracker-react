@@ -84,10 +84,10 @@ class ButtonContainer extends Component {
 			console.log("user error: currRally empty");
 			return;
 		}
-		if(this.state.currRally.length > 2){
-			console.log("too many touches already occurred. are you looking for 'Lose Point'?");
-			return;
-		}
+		// if(this.state.currRally.length > 2){
+		// 	console.log("too many touches already occurred. are you looking for 'Lose Point'?");
+		// 	return;
+		// }
 		this.setState({
 			serving: false,
 			currRally: this.state.currRally + "a"
@@ -177,7 +177,7 @@ class ButtonContainer extends Component {
 			}
 			this.setState({
 				serving: false,
-				allRallies: this.state.allRallies.concat(this.state.currRally+"s"),
+				allRallies: this.state.allRallies.concat(this.state.currRally+"f"),
 				currRally: "s",
 				score1: this.state.score1 + score1plus,
 				score2: this.state.score2 + score2plus
@@ -215,23 +215,18 @@ class ButtonContainer extends Component {
 	}
 
 	render(){
-		let faultButton;
-		if(this.state.serving){
-			faultButton = (<button className="center-padding" onClick={this.serviceFault}>Fault</button>);
-		}
-
 		return(
 		<div>
 			<div className="center">
+				<button className="center-padding" disabled={!this.state.serving} onClick={this.serviceFault}>Fault</button>
 				<button className="center-padding" onClick={this.aceOnClick}>Ace</button>
 				<button className="center-padding" onClick={this.putAwayOnClick}>Put Away</button>
+				<button className="center-padding" >undoLast</button>
+
 			</div>
 			<div className="center">
 				<button className="center-padding" onClick={this.errorOnClick}>Error</button>
 				<button className="center-padding" onClick={this.losePointOnClick}>Lose Point</button>
-			</div>
-			<div className="center">
-				{faultButton}
 			</div>
 			<div className="center">
 				<span className="center-padding">{this.state.teamName1}</span>

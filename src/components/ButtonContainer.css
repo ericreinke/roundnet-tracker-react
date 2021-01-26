@@ -1,12 +1,16 @@
 .center {
 	display: flex;
-	align-items: center;
 	justify-content: center;
 }
 
 button {
 	height: 50px;
 	width: 100px;
+}
+
+.smallButton{
+	height: 25px;
+	width: 50px;
 }
 
 .center-padding {
