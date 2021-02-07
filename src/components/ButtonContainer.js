@@ -34,7 +34,7 @@ class ButtonContainer extends Component {
 	}
 
 	componentDidMount(){
-		console.log(this.state.currRally.lastIndexOf('f'));
+		//console.log(this.state.currRally.lastIndexOf('f'));
 	}
 
 	playerOnClick(player){
@@ -229,20 +229,20 @@ class ButtonContainer extends Component {
 				<button className="center-padding" onClick={this.losePointOnClick}>Lose Point</button>
 			</div>
 			<div className="center">
-				<span className="center-padding">{this.state.teamName1}</span>
-				<span className="center-padding">{this.state.teamName2}</span>
+				<span className="center-padding">{this.props.teamNames[0]}</span>
+				<span className="center-padding">{this.props.teamNames[1]}</span>
 			</div>
 			<div className="center">
 				<span className="center-padding">{this.state.score1}</span>
 				<span className="center-padding">{this.state.score2}</span>
 			</div>
 			<div className="center">
-				<button className="player-button center-padding" onClick={()=>this.playerOnClick("1")}>Player 1</button>
-				<button className="player-button center-padding" onClick={()=>this.playerOnClick("3")}>Player 3</button>
+				<button className="player-button center-padding" onClick={()=>this.playerOnClick("1")}>{this.props.playerNames[0]}</button>
+				<button className="player-button center-padding" onClick={()=>this.playerOnClick("3")}>{this.props.playerNames[2]}</button>
 			</div>
 			<div className="center">
-				<button className="player-button center-padding" onClick={()=>this.playerOnClick("2")}>Player 2</button>
-				<button className="player-button center-padding" onClick={()=>this.playerOnClick("4")}>Player 4</button>
+				<button className="player-button center-padding" onClick={()=>this.playerOnClick("2")}>{this.props.playerNames[1]}</button>
+				<button className="player-button center-padding" onClick={()=>this.playerOnClick("4")}>{this.props.playerNames[3]}</button>
 			</div>
 			<span className="center">rally: {this.state.currRally}</span>
 			<div className="center">

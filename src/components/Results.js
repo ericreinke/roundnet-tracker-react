@@ -207,10 +207,15 @@ class Results extends Component {
 					<tbody>
 						<tr>
 							<th></th>
-							<th>Player 1</th>
-							<th>Player 2</th>
-							<th>Player 3</th>
-							<th>Player 4</th>
+							<th colspan="2">{this.props.teamNames[0]}</th>
+							<th colspan="2">{this.props.teamNames[1]}</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th>{this.props.playerNames[0]}</th>
+							<th>{this.props.playerNames[1]}</th>
+							<th>{this.props.playerNames[2]}</th>
+							<th>{this.props.playerNames[3]}</th>
 						</tr>
 						<tr>
 							<th>Serve %</th>

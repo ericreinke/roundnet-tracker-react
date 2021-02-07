@@ -1,0 +1,24 @@
+.center {
+	justify-content: center;
+	display: flex;
+}
+
+
+.center input {
+	width: 100%;
+}
+
+
+input {
+	text-align: center;
+}
+
+.hspacing {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.vspacing {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
